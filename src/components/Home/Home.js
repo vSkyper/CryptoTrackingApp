@@ -5,6 +5,8 @@ import Svg, {Path} from 'react-native-svg';
 import CoinItem from '../CoinItem';
 import HomeGlobalData from './HomeGlobalData';
 import {useNavigation} from '@react-navigation/native';
+import realm from '../../data/Database';
+import {fetchCoinsInfo} from '../../data/fetchData';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -14,16 +16,10 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    setCoinsInfo([
-      {
-        id: 'bitcoin',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        current_price: '8,000,000',
-        price_change_percentage_24h: '-0.5',
-        image: 'https://s2.coinmarketcap.com/static/img/coins/200x200/1.png',
-      },
-    ]);
+    fetchCoinsInfo().then(() => {
+      const CoinsInfo = realm.objects('CoinsInfo');
+      setCoinsInfo(CoinsInfo);
+    });
 
     return () => {
       setCoinsInfo([]);
@@ -31,7 +27,12 @@ const Home = () => {
   }, []);
 
   const onRefresh = useCallback(() => {
-    setRefreshing(false);
+    setRefreshing(true);
+    fetchCoinsInfo().then(() => {
+      const CoinsInfo = realm.objects('CoinsInfo');
+      setCoinsInfo(CoinsInfo);
+      setRefreshing(false);
+    });
   }, []);
 
   return (

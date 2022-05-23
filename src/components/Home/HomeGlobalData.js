@@ -1,16 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import tw from 'twrnc';
+import realm from '../../data/Database';
+import {fetchGlobalData} from '../../data/fetchData';
 
 const HomeGlobalData = () => {
   const [globalInfo, setGlobalInfo] = useState({});
 
   useEffect(() => {
-    setGlobalInfo({
-      total_market_cap: 0,
-      total_volume_24h: 0,
-      bitcoin_percentage_of_market_cap: 0,
-      active_currencies: 0,
+    fetchGlobalData().then(() => {
+      const GlobalData = realm.objects('GlobalData');
+      setGlobalInfo(GlobalData[0]);
     });
 
     return () => {

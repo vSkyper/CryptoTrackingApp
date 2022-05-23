@@ -5,12 +5,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import tw from 'twrnc';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Home from './components/Home/Home';
+import Coin from './components/Coin';
+import FavCoins from './components/FavCoins';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-
   return (
     <NavigationContainer
       theme={{
@@ -26,6 +26,8 @@ const App = () => {
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name='Home' component={Home} />
+          <Stack.Screen name='Coin' component={Coin} />
+          <Stack.Screen name='FavCoins' component={FavCoins} />
         </Stack.Navigator>
       </SafeAreaView>
     </NavigationContainer>
