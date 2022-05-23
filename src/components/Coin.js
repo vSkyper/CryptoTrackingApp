@@ -81,7 +81,9 @@ const Coin = ({route}) => {
 
   const modifyFav = useCallback(() => {
     if (isFav) {
-      realm.delete(realm.objects('FavCoins').filtered('id == $0', id));
+      realm.write(() => {
+        realm.delete(realm.objects('FavCoins').filtered('id == $0', id));
+      });
     } else {
       realm.write(() => {
         realm.create('FavCoins', {

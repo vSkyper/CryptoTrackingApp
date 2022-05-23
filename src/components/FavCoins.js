@@ -12,23 +12,26 @@ const FavCoins = () => {
   const [favoriteList, setFavoriteList] = useState([]);
 
   useEffect(() => {
-    let FavCoins = realm.objects('FavCoins');
-    FavCoins = FavCoins.map(item => {
-      return item.id;
+    const unsubscribe = navigation.addListener('focus', () => {
+      let FavCoins = realm.objects('FavCoins');
+      FavCoins = FavCoins.map(item => {
+        return item.id;
+      });
+
+      const realmFilter = [
+        Array(FavCoins.length)
+          .fill()
+          .map((x, i) => `id == $${i}`)
+          .join(' OR '),
+      ].concat(FavCoins);
+
+      const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
+
+      setFavoriteList(CoinsInfo);
     });
 
-    const realmFilter = [
-      Array(FavCoins.length)
-        .fill()
-        .map((x, i) => `id == $${i}`)
-        .join(' OR '),
-    ].concat(FavCoins);
-
-    const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
-
-    setFavoriteList(CoinsInfo);
-
     return () => {
+      unsubscribe;
       setFavoriteList([]);
     };
   }, [navigation]);
