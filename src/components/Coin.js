@@ -190,20 +190,19 @@ const Coin = ({route}) => {
           </Text>
           <VictoryChart
             theme={VictoryTheme.material}
-            domain={{ y: [Math.min(...data.chart), Math.max(...data.chart)] }}
-            padding={{ top: 5, bottom: 5, left: 60, right: 25 }}
-            height={250}
-          >
+            domain={{y: [Math.min(...data.chart), Math.max(...data.chart)]}}
+            padding={{top: 5, bottom: 5, left: 60, right: 25}}
+            height={250}>
             <VictoryArea
               data={data.chart}
-              style={{ data: { fill: '#334454', fillOpacity: 1 } }}
-              interpolation='natural'
+              style={{data: {fill: '#334454', fillOpacity: 1}}}
+              interpolation="natural"
             />
             <VictoryAxis
               dependentAxis
               style={{
-                axis: { stroke: 'none' },
-                grid: { stroke: 'transparent' },
+                axis: {stroke: 'none'},
+                grid: {stroke: 'transparent'},
               }}
             />
           </VictoryChart>
