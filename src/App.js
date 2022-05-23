@@ -8,7 +8,9 @@ import {WithSplashScreen} from './SplashScreen';
 import Home from './components/Home/Home';
 import Coin from './components/Coin';
 import FavCoins from './components/FavCoins';
+import realm from './data/Database';
 import {fetchGlobalData, fetchCoinsInfo} from './data/fetchData';
+import Notifications from './Notifications';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +24,44 @@ const App = () => {
 
     Promise.all([fetchGlobalDataPromise, fetchCoinsInfoPromise]).then(() => {
       setIsAppReady(true);
+
+      let FavCoins = realm.objects('FavCoins');
+      FavCoins = FavCoins.map(item => {
+        return item.id;
+      });
+
+      const realmFilter = [
+        Array(FavCoins.length)
+          .fill()
+          .map((x, i) => `id == $${i}`)
+          .join(' OR '),
+      ].concat(FavCoins);
+
+      const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
+
+      CoinsInfo.forEach(coin => {
+        if (coin.price_change_percentage_24h > 5) {
+          Notifications.scheduleNotification(
+            `🚀 ${coin.symbol.toUpperCase()} is up ${parseFloat(
+              coin.price_change_percentage_24h,
+            ).toFixed(2)}%`,
+            `In the past 24 hours. It's now $${parseFloat(coin.current_price)
+              .toFixed(8)
+              .replace(/\.?0+$/, '')}`,
+            1,
+          );
+        } else if (coin.price_change_percentage_24h < -5) {
+          Notifications.scheduleNotification(
+            `😔 ${coin.symbol.toUpperCase()} is down ${parseFloat(
+              coin.price_change_percentage_24h,
+            ).toFixed(2)}%`,
+            `In the past 24 hours. It's now $${parseFloat(coin.current_price)
+              .toFixed(8)
+              .replace(/\.?0+$/, '')}`,
+            1,
+          );
+        }
+      });
     });
   }, []);
 
