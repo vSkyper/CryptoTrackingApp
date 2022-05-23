@@ -2,16 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import tw from 'twrnc';
 import realm from '../../data/Database';
-import {fetchGlobalData} from '../../data/fetchData';
 
 const HomeGlobalData = () => {
   const [globalInfo, setGlobalInfo] = useState({});
 
   useEffect(() => {
-    fetchGlobalData().then(() => {
-      const GlobalData = realm.objects('GlobalData');
-      setGlobalInfo(GlobalData[0]);
-    });
+    const GlobalData = realm.objects('GlobalData');
+    setGlobalInfo(GlobalData[0]);
 
     return () => {
       setGlobalInfo({});
@@ -19,7 +16,7 @@ const HomeGlobalData = () => {
   }, []);
 
   return (
-    <View style={tw`mb-6 px-3`}>
+    <View style={tw`mb-3 px-3`}>
       <Text style={tw`text-base text-white`}>
         The global cryptocurrency market cap today is $
         {parseFloat(

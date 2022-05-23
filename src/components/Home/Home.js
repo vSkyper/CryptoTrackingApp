@@ -16,10 +16,8 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetchCoinsInfo().then(() => {
-      const CoinsInfo = realm.objects('CoinsInfo');
-      setCoinsInfo(CoinsInfo);
-    });
+    const CoinsInfo = realm.objects('CoinsInfo');
+    setCoinsInfo(CoinsInfo);
 
     return () => {
       setCoinsInfo([]);
