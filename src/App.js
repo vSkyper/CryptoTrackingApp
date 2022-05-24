@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import tw from 'twrnc';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {WithSplashScreen} from './SplashScreen';
 import Home from './components/Home/Home';
 import Coin from './components/Coin';
@@ -73,8 +72,8 @@ const App = () => {
         },
       }}>
       <WithSplashScreen isAppReady={isAppReady}>
-        <SafeAreaView style={tw`flex-1 bg-gray-800`}>
-          <StatusBar barStyle={'dark-content'} />
+        <SafeAreaView style={tw`flex-1 bg-zinc-900`}>
+          <StatusBar backgroundColor={tw.color('zinc-900')} barStyle={'dark-content'} />
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{headerShown: false}}>

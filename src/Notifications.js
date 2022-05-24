@@ -19,10 +19,6 @@ class Notifications {
       },
       () => {},
     );
-
-    PushNotification.getScheduledLocalNotifications(rn => {
-      console.log('SN --- ', rn);
-    });
   }
 
   scheduleNotification(title, message, seconds) {

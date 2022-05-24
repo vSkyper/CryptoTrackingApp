@@ -62,7 +62,7 @@ export const Splash = ({isAppReady}) => {
   return (
     <Animated.View
       collapsable={false}
-      style={tw.style('bg-gray-800 flex items-center justify-center absolute', {
+      style={tw.style('bg-zinc-900 flex items-center justify-center absolute', {
         ...StyleSheet.absoluteFillObject,
         opacity: containerOpacity,
       })}>

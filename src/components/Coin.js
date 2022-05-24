@@ -10,12 +10,7 @@ import {
 import tw from 'twrnc';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
-import {
-  VictoryArea,
-  VictoryChart,
-  VictoryAxis,
-  VictoryTheme,
-} from 'victory-native';
+import {LineChart} from 'react-native-wagmi-charts';
 import realm from '../data/Database';
 
 const Coin = ({route}) => {
@@ -61,13 +56,17 @@ const Coin = ({route}) => {
             name: data.name,
             price: data.market_data.current_price.usd,
             price_change_percentage_24h:
-              data.market_data.price_change_percentage_24h_in_currency.usd,
+              data.market_data.price_change_percentage_24h,
+            price_change_percentage_7d:
+              data.market_data.price_change_percentage_7d,
             market_cap: data.market_data.market_cap.usd,
             total_volume: data.market_data.total_volume.usd,
             low: data.market_data.low_24h.usd,
             high: data.market_data.high_24h.usd,
             image_small: data.image.small,
-            chart: data.market_data.sparkline_7d.price,
+            chart: data.market_data.sparkline_7d.price.map(item => {
+              return {value: item};
+            }),
           });
           resolve();
         });
@@ -190,24 +189,18 @@ const Coin = ({route}) => {
           <Text style={tw`text-white text-lg font-semibold self-start`}>
             7 Days Chart:
           </Text>
-          <VictoryChart
-            theme={VictoryTheme.material}
-            domain={{y: [Math.min(...data.chart), Math.max(...data.chart)]}}
-            padding={{top: 5, bottom: 5, left: 60, right: 25}}
-            height={250}>
-            <VictoryArea
-              data={data.chart}
-              style={{data: {fill: '#334454', fillOpacity: 1}}}
-              interpolation="natural"
-            />
-            <VictoryAxis
-              dependentAxis
-              style={{
-                axis: {stroke: 'none'},
-                grid: {stroke: 'transparent'},
-              }}
-            />
-          </VictoryChart>
+          <LineChart.Provider data={data.chart}>
+            <LineChart height={150}>
+              <LineChart.Path
+                color={
+                  data.price_change_percentage_7d < 0
+                    ? tw.color('red-500')
+                    : tw.color('green-500')
+                }>
+                <LineChart.Gradient />
+              </LineChart.Path>
+            </LineChart>
+          </LineChart.Provider>
         </View>
         <View style={tw`p-3`}>
           <View
