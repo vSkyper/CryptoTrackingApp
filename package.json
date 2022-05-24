@@ -23,8 +23,7 @@
     "react-native-svg": "^12.3.0",
     "react-native-wagmi-charts": "^2.1.0",
     "realm": "^10.20.0-beta.5",
-    "twrnc": "^3.3.2",
-    "victory-native": "^36.4.0"
+    "twrnc": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
