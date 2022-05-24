@@ -25,42 +25,58 @@ const App = () => {
       setIsAppReady(true);
 
       let FavCoins = realm.objects('FavCoins');
-      FavCoins = FavCoins.map(item => {
-        return item.id;
-      });
 
-      const realmFilter = [
-        Array(FavCoins.length)
-          .fill()
-          .map((x, i) => `id == $${i}`)
-          .join(' OR '),
-      ].concat(FavCoins);
+      if (FavCoins.length !== 0) {
+        FavCoins = FavCoins.map(item => {
+          return item.id;
+        });
 
-      const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
+        const realmFilter = [
+          Array(FavCoins.length)
+            .fill()
+            .map((x, i) => `id == $${i}`)
+            .join(' OR '),
+        ].concat(FavCoins);
 
-      CoinsInfo.forEach(coin => {
-        if (coin.price_change_percentage_24h > 5) {
+        const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
+
+        const maxPercentage = Math.max(
+          ...CoinsInfo.map(coin => coin.price_change_percentage_24h),
+        );
+        const minPercentage = Math.min(
+          ...CoinsInfo.map(coin => coin.price_change_percentage_24h),
+        );
+
+        const maxCoin = CoinsInfo.find(
+          coin => coin.price_change_percentage_24h === maxPercentage,
+        );
+        const minCoin = CoinsInfo.find(
+          coin => coin.price_change_percentage_24h === minPercentage,
+        );
+
+        if (maxCoin.price_change_percentage_24h > 0) {
           Notifications.scheduleNotification(
-            `🚀 ${coin.symbol.toUpperCase()} is up ${parseFloat(
-              coin.price_change_percentage_24h,
+            `🚀 ${maxCoin.symbol.toUpperCase()} is up ${parseFloat(
+              maxCoin.price_change_percentage_24h,
             ).toFixed(2)}%`,
-            `In the past 24 hours. It's now $${parseFloat(coin.current_price)
-              .toFixed(8)
-              .replace(/\.?0+$/, '')}`,
-            1,
-          );
-        } else if (coin.price_change_percentage_24h < -5) {
-          Notifications.scheduleNotification(
-            `😔 ${coin.symbol.toUpperCase()} is down ${parseFloat(
-              coin.price_change_percentage_24h,
-            ).toFixed(2)}%`,
-            `In the past 24 hours. It's now $${parseFloat(coin.current_price)
+            `In the past 24 hours. It's now $${parseFloat(maxCoin.current_price)
               .toFixed(8)
               .replace(/\.?0+$/, '')}`,
             1,
           );
         }
-      });
+        if (minCoin.price_change_percentage_24h < 0) {
+          Notifications.scheduleNotification(
+            `😔 ${minCoin.symbol.toUpperCase()} is down ${parseFloat(
+              minCoin.price_change_percentage_24h,
+            ).toFixed(2)}%`,
+            `In the past 24 hours. It's now $${parseFloat(minCoin.current_price)
+              .toFixed(8)
+              .replace(/\.?0+$/, '')}`,
+            1,
+          );
+        }
+      }
     });
   }, []);
 
@@ -71,9 +87,12 @@ const App = () => {
           background: null,
         },
       }}>
+      <StatusBar
+        backgroundColor={tw.color('zinc-900')}
+        barStyle={'dark-content'}
+      />
       <WithSplashScreen isAppReady={isAppReady}>
         <SafeAreaView style={tw`flex-1 bg-zinc-900`}>
-          <StatusBar backgroundColor={tw.color('zinc-900')} barStyle={'dark-content'} />
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{headerShown: false}}>

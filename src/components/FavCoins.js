@@ -14,20 +14,23 @@ const FavCoins = () => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       let FavCoins = realm.objects('FavCoins');
-      FavCoins = FavCoins.map(item => {
-        return item.id;
-      });
 
-      const realmFilter = [
-        Array(FavCoins.length)
-          .fill()
-          .map((x, i) => `id == $${i}`)
-          .join(' OR '),
-      ].concat(FavCoins);
+      if (FavCoins.length !== 0) {
+        FavCoins = FavCoins.map(item => {
+          return item.id;
+        });
 
-      const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
+        const realmFilter = [
+          Array(FavCoins.length)
+            .fill()
+            .map((x, i) => `id == $${i}`)
+            .join(' OR '),
+        ].concat(FavCoins);
 
-      setFavoriteList(CoinsInfo);
+        const CoinsInfo = realm.objects('CoinsInfo').filtered(...realmFilter);
+
+        setFavoriteList(CoinsInfo);
+      }
     });
 
     return () => {
