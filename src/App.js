@@ -5,7 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import tw from 'twrnc';
 import {WithSplashScreen} from './SplashScreen';
 import Home from './components/Home/Home';
-import Coin from './components/Coin';
+import Coin from './components/Coin/Coin';
 import FavCoins from './components/FavCoins';
 import realm from './data/Database';
 import {fetchGlobalData, fetchCoinsInfo} from './data/fetchData';

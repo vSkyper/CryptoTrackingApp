@@ -10,9 +10,8 @@ import {
 import tw from 'twrnc';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
-import {LineChart} from 'react-native-wagmi-charts';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import realm from '../data/Database';
+import CoinChart from './CoinChart';
+import realm from '../../data/Database';
 
 const Coin = ({route}) => {
   const navigation = useNavigation();
@@ -49,7 +48,7 @@ const Coin = ({route}) => {
   const fetchData = useCallback(() => {
     return new Promise((resolve, reject) => {
       fetch(
-        `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`,
+        `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
       )
         .then(response => response.json())
         .then(data => {
@@ -65,9 +64,6 @@ const Coin = ({route}) => {
             low: data.market_data.low_24h.usd,
             high: data.market_data.high_24h.usd,
             image_small: data.image.small,
-            chart: data.market_data.sparkline_7d.price.map(item => {
-              return {value: item};
-            }),
           });
           resolve();
         });
@@ -187,44 +183,11 @@ const Coin = ({route}) => {
           </View>
         </View>
         <View style={tw`pt-3`}>
-          <Text style={tw`text-white text-lg font-semibold px-3`}>
-            7 Days Chart:
-          </Text>
-          <GestureHandlerRootView>
-            <LineChart.Provider data={data.chart}>
-              <LineChart height={150}>
-                <LineChart.Path
-                  color={
-                    data.price_change_percentage_7d < 0
-                      ? tw.color('red-500')
-                      : tw.color('green-500')
-                  }>
-                  <LineChart.Gradient />
-                </LineChart.Path>
-                <LineChart.CursorCrosshair
-                  color={
-                    data.price_change_percentage_7d < 0
-                      ? tw.color('red-500')
-                      : tw.color('green-500')
-                  }>
-                  <LineChart.Tooltip>
-                    <LineChart.PriceText
-                      precision={8}
-                      style={tw`text-white`}
-                      format={({value}) => {
-                        'worklet';
-                        return `$${value}`;
-                      }}
-                    />
-                  </LineChart.Tooltip>
-                </LineChart.CursorCrosshair>
-              </LineChart>
-            </LineChart.Provider>
-          </GestureHandlerRootView>
+          <CoinChart id={id} />
         </View>
         <View style={tw`p-3`}>
           <View
-            style={tw`py-2 border-b border-slate-700 flex flex-row justify-between`}>
+            style={tw`py-2 border-b border-zinc-700 flex flex-row justify-between`}>
             <Text style={tw`text-white`}>Market Capitalization</Text>
             <Text style={tw`text-white ml-5`}>
               $
@@ -235,7 +198,7 @@ const Coin = ({route}) => {
             </Text>
           </View>
           <View
-            style={tw`py-2 border-b border-slate-700 flex flex-row justify-between`}>
+            style={tw`py-2 border-b border-zinc-700 flex flex-row justify-between`}>
             <Text style={tw`text-white`}>24h Trading Volume</Text>
             <Text style={tw`text-white ml-5`}>
               $
@@ -246,7 +209,7 @@ const Coin = ({route}) => {
             </Text>
           </View>
           <View
-            style={tw`py-2 border-b border-slate-700 flex flex-row justify-between`}>
+            style={tw`py-2 border-b border-zinc-700 flex flex-row justify-between`}>
             <Text style={tw`text-white`}>Volume / Market Cap</Text>
             <Text style={tw`text-white ml-5`}>
               {parseFloat(data.total_volume / data.market_cap).toFixed(4)}
