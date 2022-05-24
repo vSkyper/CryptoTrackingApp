@@ -22,10 +22,39 @@ const Coin = ({route}) => {
 
   const [isFav, setFav] = useState(false);
 
-  const [refreshing, setRefreshing] = useState(false);
-
   useEffect(() => {
-    fetchData();
+    setTimeout(() => {
+      Promise.all([
+        fetch(
+          `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
+        ),
+        fetch(
+          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`,
+        ),
+      ])
+        .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
+        .then(([data1, data2]) => {
+          setData({
+            name: data1.name,
+            price: data1.market_data.current_price.usd,
+            price_change_percentage_24h:
+              data1.market_data.price_change_percentage_24h,
+            price_change_percentage_7d:
+              data1.market_data.price_change_percentage_7d,
+            market_cap: data1.market_data.market_cap.usd,
+            total_volume: data1.market_data.total_volume.usd,
+            low: data1.market_data.low_24h.usd,
+            high: data1.market_data.high_24h.usd,
+            image_small: data1.image.small,
+            chart: data2.prices.map(item => {
+              return {
+                timestamp: item[0],
+                value: item[1],
+              };
+            }),
+          });
+        });
+    }, 100);
 
     return () => {
       setData({});
@@ -44,36 +73,6 @@ const Coin = ({route}) => {
       setFav(false);
     };
   }, [id]);
-
-  const fetchData = useCallback(() => {
-    return new Promise((resolve, reject) => {
-      fetch(
-        `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
-      )
-        .then(response => response.json())
-        .then(data => {
-          setData({
-            name: data.name,
-            price: data.market_data.current_price.usd,
-            price_change_percentage_24h:
-              data.market_data.price_change_percentage_24h,
-            price_change_percentage_7d:
-              data.market_data.price_change_percentage_7d,
-            market_cap: data.market_data.market_cap.usd,
-            total_volume: data.market_data.total_volume.usd,
-            low: data.market_data.low_24h.usd,
-            high: data.market_data.high_24h.usd,
-            image_small: data.image.small,
-          });
-          resolve();
-        });
-    });
-  }, []);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchData().then(() => setRefreshing(false));
-  }, []);
 
   const modifyFav = useCallback(() => {
     if (isFav) {
@@ -139,10 +138,7 @@ const Coin = ({route}) => {
           </Svg>
         )}
       </View>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+      <ScrollView>
         <View style={tw`p-3`}>
           <Text style={tw`text-white text-lg`}>Current Price:</Text>
           <View style={tw` mt-1 flex flex-row items-center`}>
@@ -183,7 +179,7 @@ const Coin = ({route}) => {
           </View>
         </View>
         <View style={tw`pt-3`}>
-          <CoinChart id={id} />
+          <CoinChart data={data.chart} />
         </View>
         <View style={tw`p-3`}>
           <View
