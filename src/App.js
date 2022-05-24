@@ -54,7 +54,7 @@ const App = () => {
           coin => coin.price_change_percentage_24h === minPercentage,
         );
 
-        if (maxCoin.price_change_percentage_24h > 0) {
+        if (maxCoin.price_change_percentage_24h > 5) {
           Notifications.scheduleNotification(
             `🚀 ${maxCoin.symbol.toUpperCase()} is up ${parseFloat(
               maxCoin.price_change_percentage_24h,
@@ -65,7 +65,7 @@ const App = () => {
             1,
           );
         }
-        if (minCoin.price_change_percentage_24h < 0) {
+        if (minCoin.price_change_percentage_24h < -5) {
           Notifications.scheduleNotification(
             `😔 ${minCoin.symbol.toUpperCase()} is down ${parseFloat(
               minCoin.price_change_percentage_24h,

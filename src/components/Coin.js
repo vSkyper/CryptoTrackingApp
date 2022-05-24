@@ -11,6 +11,7 @@ import tw from 'twrnc';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import {LineChart} from 'react-native-wagmi-charts';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import realm from '../data/Database';
 
 const Coin = ({route}) => {
@@ -185,22 +186,41 @@ const Coin = ({route}) => {
             )}
           </View>
         </View>
-        <View style={tw`p-3 flex items-center`}>
-          <Text style={tw`text-white text-lg font-semibold self-start`}>
+        <View style={tw`pt-3`}>
+          <Text style={tw`text-white text-lg font-semibold px-3`}>
             7 Days Chart:
           </Text>
-          <LineChart.Provider data={data.chart}>
-            <LineChart height={150}>
-              <LineChart.Path
-                color={
-                  data.price_change_percentage_7d < 0
-                    ? tw.color('red-500')
-                    : tw.color('green-500')
-                }>
-                <LineChart.Gradient />
-              </LineChart.Path>
-            </LineChart>
-          </LineChart.Provider>
+          <GestureHandlerRootView>
+            <LineChart.Provider data={data.chart}>
+              <LineChart height={150}>
+                <LineChart.Path
+                  color={
+                    data.price_change_percentage_7d < 0
+                      ? tw.color('red-500')
+                      : tw.color('green-500')
+                  }>
+                  <LineChart.Gradient />
+                </LineChart.Path>
+                <LineChart.CursorCrosshair
+                  color={
+                    data.price_change_percentage_7d < 0
+                      ? tw.color('red-500')
+                      : tw.color('green-500')
+                  }>
+                  <LineChart.Tooltip>
+                    <LineChart.PriceText
+                      precision={8}
+                      style={tw`text-white`}
+                      format={({value}) => {
+                        'worklet';
+                        return `$${value}`;
+                      }}
+                    />
+                  </LineChart.Tooltip>
+                </LineChart.CursorCrosshair>
+              </LineChart>
+            </LineChart.Provider>
+          </GestureHandlerRootView>
         </View>
         <View style={tw`p-3`}>
           <View
