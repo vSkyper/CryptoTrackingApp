@@ -12,6 +12,7 @@ import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import CoinChart from './CoinChart';
 import realm from '../../data/Database';
+import {fetchCoinData, fetchCoinInfo} from '../../data/fetchData';
 
 const Coin = ({route}) => {
   const navigation = useNavigation();
@@ -24,42 +25,15 @@ const Coin = ({route}) => {
 
   useEffect(() => {
     setTimeout(() => {
-      Promise.all([
-        fetch(
-          `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
-        ),
-        fetch(
-          `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`,
-        ),
-      ])
-        .then(([res1, res2]) => Promise.all([res1.json(), res2.json()]))
-        .then(([data1, data2]) => {
-          setData({
-            name: data1.name,
-            price: data1.market_data.current_price.usd,
-            price_change_percentage_24h:
-              data1.market_data.price_change_percentage_24h,
-            price_change_percentage_7d:
-              data1.market_data.price_change_percentage_7d,
-            market_cap: data1.market_data.market_cap.usd,
-            total_volume: data1.market_data.total_volume.usd,
-            low: data1.market_data.low_24h.usd,
-            high: data1.market_data.high_24h.usd,
-            image_small: data1.image.small,
-            chart: data2.prices.map(item => {
-              return {
-                timestamp: item[0],
-                value: item[1],
-              };
-            }),
-          });
-        });
+      fetchCoinInfo(id).then(res => {
+        setData(res);
+      });
     }, 100);
 
     return () => {
       setData({});
     };
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const FavCoins = realm.objects('FavCoins').filtered('id == $0', id);
