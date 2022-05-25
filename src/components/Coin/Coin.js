@@ -260,7 +260,7 @@ const Coin = ({route}) => {
         </View>
         <View style={tw`p-3`}>
           <View
-            style={tw`py-2 border-b border-zinc-700 flex flex-row justify-between`}>
+            style={tw`py-2 border-b border-gray-500 flex flex-row justify-between`}>
             <Text style={tw`text-white`}>Market Capitalization</Text>
             <Text style={tw`text-white ml-5`}>
               $
@@ -271,7 +271,7 @@ const Coin = ({route}) => {
             </Text>
           </View>
           <View
-            style={tw`py-2 border-b border-zinc-700 flex flex-row justify-between`}>
+            style={tw`py-2 border-b border-gray-500 flex flex-row justify-between`}>
             <Text style={tw`text-white`}>24h Trading Volume</Text>
             <Text style={tw`text-white ml-5`}>
               $
@@ -282,7 +282,7 @@ const Coin = ({route}) => {
             </Text>
           </View>
           <View
-            style={tw`py-2 border-b border-zinc-700 flex flex-row justify-between`}>
+            style={tw`py-2 border-b border-gray-500 flex flex-row justify-between`}>
             <Text style={tw`text-white`}>Volume / Market Cap</Text>
             <Text style={tw`text-white ml-5`}>
               {parseFloat(data.total_volume / data.market_cap).toFixed(4)}

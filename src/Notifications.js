@@ -23,7 +23,7 @@ class Notifications {
 
   scheduleNotification(title, message, seconds) {
     PushNotification.localNotificationSchedule({
-      channelId: 'reminders',
+      channelId: 'cryptoInformation',
       title,
       message,
       date: new Date(Date.now() + seconds * 1000),

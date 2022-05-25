@@ -95,7 +95,7 @@ const Home = () => {
           <View>
             <HomeGlobalData />
             <View
-              style={tw`px-3 m-3 text-lg border border-zinc-700 rounded-2xl flex flex-row items-center`}>
+              style={tw`px-3 m-3 text-lg border border-gray-500 rounded-2xl flex flex-row items-center`}>
               <Svg
                 style={tw`h-6 w-6 text-gray-500`}
                 fill="none"
