@@ -1,5 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, Text, Image, ActivityIndicator, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ActivityIndicator,
+  ScrollView,
+  Pressable,
+} from 'react-native';
 import tw from 'twrnc';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
@@ -13,6 +20,7 @@ const Coin = ({route}) => {
   const {id} = route.params;
 
   const [data, setData] = useState({});
+  const [days, setDays] = useState(7);
 
   const [isFav, setFav] = useState(false);
 
@@ -144,7 +152,111 @@ const Coin = ({route}) => {
           </View>
         </View>
         <View style={tw`pt-3`}>
-          <CoinChart id={id} />
+          <View style={tw`px-3 flex flex-row flex-nowrap`}>
+            <Pressable
+              onPress={() => {
+                setDays(1);
+              }}
+              style={tw.style(
+                'p-4 rounded-t-lg border-b-2 border-transparent',
+                {
+                  'border-blue-500': days === 1,
+                },
+              )}>
+              <Text
+                style={tw.style('text-gray-500', {
+                  'text-blue-500': days === 1,
+                })}>
+                24h
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setDays(7);
+              }}
+              style={tw.style(
+                'mr-2 p-4 rounded-t-lg border-b-2 border-transparent',
+                {
+                  'border-blue-500': days === 7,
+                },
+              )}>
+              <Text
+                style={tw.style('text-gray-500', {
+                  'text-blue-500': days === 7,
+                })}>
+                7d
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setDays(30);
+              }}
+              style={tw.style(
+                'mr-2 p-4 rounded-t-lg border-b-2 border-transparent',
+                {
+                  'border-blue-500': days === 30,
+                },
+              )}>
+              <Text
+                style={tw.style('text-gray-500', {
+                  'text-blue-500': days === 30,
+                })}>
+                30d
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setDays(90);
+              }}
+              style={tw.style(
+                'mr-2 p-4 rounded-t-lg border-b-2 border-transparent',
+                {
+                  'border-blue-500': days === 90,
+                },
+              )}>
+              <Text
+                style={tw.style('text-gray-500', {
+                  'text-blue-500': days === 90,
+                })}>
+                90d
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setDays(365);
+              }}
+              style={tw.style(
+                'mr-2 p-4 rounded-t-lg border-b-2 border-transparent',
+                {
+                  'border-blue-500': days === 365,
+                },
+              )}>
+              <Text
+                style={tw.style('text-gray-500', {
+                  'text-blue-500': days === 365,
+                })}>
+                1y
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setDays('max');
+              }}
+              style={tw.style(
+                'mr-2 p-4 rounded-t-lg border-b-2 border-transparent',
+                {
+                  'border-blue-500': days === 'max',
+                },
+              )}>
+              <Text
+                style={tw.style('text-gray-500', {
+                  'text-blue-500': days === 'max',
+                })}>
+                max
+              </Text>
+            </Pressable>
+          </View>
+          <CoinChart id={id} days={days} />
         </View>
         <View style={tw`p-3`}>
           <View

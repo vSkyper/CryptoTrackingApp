@@ -61,9 +61,9 @@ export const fetchCoinInfo = async id => {
   };
 };
 
-export const fetchChartData = async id => {
+export const fetchChartData = async (id, days) => {
   const data = await fetch(
-    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`,
+    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${days}`,
   );
   const json = await data.json();
 

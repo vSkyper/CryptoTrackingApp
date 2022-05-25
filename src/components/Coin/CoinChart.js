@@ -1,26 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ActivityIndicator} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import tw from 'twrnc';
 import {LineChart} from 'react-native-wagmi-charts';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {fetchChartData} from '../../data/fetchData';
 
-const CoinChart = ({id}) => {
+const CoinChart = ({id, days}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetchChartData(id).then(res => {
+    fetchChartData(id, days).then(res => {
       setData(res);
     });
 
     return () => {
-      setData({});
+      setData([]);
     };
-  }, [id]);
+  }, [id, days]);
 
   if (data.length === 0) {
     return (
-      <View style={tw`flex-1 items-center justify-center`}>
+      <View style={tw`flex-1 items-center justify-center pt-4`}>
         <ActivityIndicator size="large" color="#334454" />
       </View>
     );
@@ -30,9 +30,6 @@ const CoinChart = ({id}) => {
 
   return (
     <View>
-      <Text style={tw`text-white text-lg font-semibold px-3`}>
-        7 Days Chart:
-      </Text>
       <GestureHandlerRootView>
         <LineChart.Provider data={data}>
           <LineChart height={150}>
