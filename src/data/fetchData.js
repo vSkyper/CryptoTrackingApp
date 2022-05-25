@@ -43,30 +43,32 @@ export const fetchCoinsInfo = async () => {
 };
 
 export const fetchCoinInfo = async id => {
-  const data = await Promise.all([
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
-    ),
-    fetch(
-      `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`,
-    ),
-  ]);
-  const json = await Promise.all([data[0].json(), data[1].json()]);
+  const data = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${id}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false`,
+  );
+  const json = await data.json();
 
   return {
-    name: json[0].name,
-    price: json[0].market_data.current_price.usd,
-    price_change_percentage_24h:
-      json[0].market_data.price_change_percentage_24h,
-    price_change_percentage_7d: json[0].market_data.price_change_percentage_7d,
-    market_cap: json[0].market_data.market_cap.usd,
-    total_volume: json[0].market_data.total_volume.usd,
-    low: json[0].market_data.low_24h.usd,
-    high: json[0].market_data.high_24h.usd,
-    image_small: json[0].image.small,
-    chart: json[1].prices.map(([timestamp, value]) => ({
-      timestamp,
-      value,
-    })),
+    name: json.name,
+    price: json.market_data.current_price.usd,
+    price_change_percentage_24h: json.market_data.price_change_percentage_24h,
+    price_change_percentage_7d: json.market_data.price_change_percentage_7d,
+    market_cap: json.market_data.market_cap.usd,
+    total_volume: json.market_data.total_volume.usd,
+    low: json.market_data.low_24h.usd,
+    high: json.market_data.high_24h.usd,
+    image_small: json.image.small,
   };
+};
+
+export const fetchChartData = async id => {
+  const data = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=7`,
+  );
+  const json = await data.json();
+
+  return json.prices.map(([timestamp, value]) => ({
+    timestamp,
+    value,
+  }));
 };

@@ -1,10 +1,31 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, ActivityIndicator} from 'react-native';
 import tw from 'twrnc';
 import {LineChart} from 'react-native-wagmi-charts';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {fetchChartData} from '../../data/fetchData';
 
-const CoinChart = ({data}) => {
+const CoinChart = ({id}) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchChartData(id).then(res => {
+      setData(res);
+    });
+
+    return () => {
+      setData({});
+    };
+  }, [id]);
+
+  if (data.length === 0) {
+    return (
+      <View style={tw`flex-1 items-center justify-center`}>
+        <ActivityIndicator size="large" color="#334454" />
+      </View>
+    );
+  }
+
   const priceChange = data[data.length - 1].value - data[0].value;
 
   return (

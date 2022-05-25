@@ -1,18 +1,11 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ActivityIndicator,
-  ScrollView,
-  RefreshControl,
-} from 'react-native';
+import {View, Text, Image, ActivityIndicator, ScrollView} from 'react-native';
 import tw from 'twrnc';
 import Svg, {Path} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
 import CoinChart from './CoinChart';
 import realm from '../../data/Database';
-import {fetchCoinData, fetchCoinInfo} from '../../data/fetchData';
+import {fetchCoinInfo} from '../../data/fetchData';
 
 const Coin = ({route}) => {
   const navigation = useNavigation();
@@ -24,11 +17,9 @@ const Coin = ({route}) => {
   const [isFav, setFav] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
-      fetchCoinInfo(id).then(res => {
-        setData(res);
-      });
-    }, 100);
+    fetchCoinInfo(id).then(res => {
+      setData(res);
+    });
 
     return () => {
       setData({});
@@ -37,7 +28,7 @@ const Coin = ({route}) => {
 
   useEffect(() => {
     const FavCoins = realm.objects('FavCoins').filtered('id == $0', id);
-    if (Object.keys(FavCoins).length !== 0) {
+    if (FavCoins.length !== 0) {
       setFav(true);
     } else {
       setFav(false);
@@ -153,7 +144,7 @@ const Coin = ({route}) => {
           </View>
         </View>
         <View style={tw`pt-3`}>
-          <CoinChart data={data.chart} />
+          <CoinChart id={id} />
         </View>
         <View style={tw`p-3`}>
           <View
