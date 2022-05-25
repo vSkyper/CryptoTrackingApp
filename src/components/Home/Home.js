@@ -1,5 +1,12 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, Text, FlatList, Pressable, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  TextInput,
+} from 'react-native';
 import tw from 'twrnc';
 import Svg, {Path} from 'react-native-svg';
 import CoinItem from '../CoinItem';
@@ -15,23 +22,29 @@ const Home = () => {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  const [searchPhrase, setSearchPhrase] = useState('');
+
   useEffect(() => {
-    const CoinsInfo = realm.objects('CoinsInfo');
+    const CoinsInfo = realm
+      .objects('CoinsInfo')
+      .filtered('name CONTAINS[c] $0', searchPhrase);
     setCoinsInfo(CoinsInfo);
 
     return () => {
       setCoinsInfo([]);
     };
-  }, []);
+  }, [searchPhrase]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchCoinsInfo().then(() => {
-      const CoinsInfo = realm.objects('CoinsInfo');
+      const CoinsInfo = realm
+        .objects('CoinsInfo')
+        .filtered('name CONTAINS[c] $0', searchPhrase);
       setCoinsInfo(CoinsInfo);
       setRefreshing(false);
     });
-  }, []);
+  }, [searchPhrase]);
 
   return (
     <View style={tw`flex-1`}>
@@ -78,7 +91,16 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         initialNumToRender={10}
-        ListHeaderComponent={HomeGlobalData}
+        ListHeaderComponent={
+          <View>
+            <HomeGlobalData />
+            <TextInput
+              style={tw`pl-3 m-3 text-lg border border-zinc-500 rounded-2xl`}
+              onChangeText={setSearchPhrase}
+              placeholder="Search..."
+            />
+          </View>
+        }
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
