@@ -94,11 +94,32 @@ const Home = () => {
         ListHeaderComponent={
           <View>
             <HomeGlobalData />
-            <TextInput
-              style={tw`pl-3 m-3 text-lg border border-zinc-500 rounded-2xl`}
-              onChangeText={setSearchPhrase}
-              placeholder="Search..."
-            />
+            <View
+              style={tw`px-3 m-3 text-lg border border-zinc-700 rounded-2xl flex flex-row items-center`}>
+              <Svg
+                style={tw`h-6 w-6 text-gray-500`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
+                <Path d="m21 21-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
+              </Svg>
+              <TextInput
+                style={tw`pl-2 pr-3 flex-1 items-stretch`}
+                onChangeText={setSearchPhrase}
+                value={searchPhrase}
+                placeholder="Search..."
+              />
+              {searchPhrase.length > 0 && (
+                <Svg
+                  style={tw`h-6 w-6 text-gray-500`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  onPress={() => {setSearchPhrase('')}}>
+                  <Path d="M6 18 18 6M6 6l12 12" />
+                </Svg>
+              )}
+            </View>
           </View>
         }
         refreshControl={
