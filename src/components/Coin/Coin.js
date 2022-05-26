@@ -25,9 +25,11 @@ const Coin = ({route}) => {
   const [isFav, setFav] = useState(false);
 
   useEffect(() => {
-    fetchCoinInfo(id).then(res => {
-      setData(res);
-    });
+    setTimeout(() => {
+      fetchCoinInfo(id).then(res => {
+        setData(res);
+      });
+    }, 100);
 
     return () => {
       setData({});
